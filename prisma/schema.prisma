@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl      = env("DIRECT_URL")
+}
+
+model Respuestas_Encuesta {
+
+  id               Int       @id @default(autoincrement())
+  fechaRegistro    DateTime  @default(now())
+  
+  edad                 Int
+  genero               String    @db.VarChar(20) 
+  franjaHoraria        String    @db.VarChar(30) 
+  frecuenciaEscucha    String    @db.VarChar(30)
+  
+  artistaSugerido      String?   @db.VarChar(255)
+  musicaEpoca          String    @db.VarChar(50)
+  importanciaIdioma    String    @db.VarChar(30)
+  interesProgramas     String    @db.VarChar(50)
+  calidadTecnica       String    @db.VarChar(20)
+  calidadSeleccion     String    @db.VarChar(20)
+  franjaMasVariedad    String    @db.VarChar(30)
+  comoNosEncontro      String    @db.VarChar(30)
+  sugerenciaAdicional  String?   @db.Text
+  
+  //RELACIONES
+  lugaresEscucha  Lugares_Escucha[]
+  generos         Preferencias_Generos[]
+  
+  @@map("respuestas_encuesta")
+}
+
+model Lugares_Escucha {
+  id              Int       @id @default(autoincrement())
+  
+  // Clave Foránea (FK) para la relación 1:M
+  respuestaId     Int
+  lugarEscucha    String    @db.VarChar(50) // Casa, Trabajo, Coche, Gimnasio, etc.
+  
+  respuesta       Respuestas_Encuesta @relation(fields: [respuestaId], references: [id])
+  
+  @@map("lugares_escucha")
+}
+
+model Preferencias_Generos {
+  id              Int       @id @default(autoincrement())
+  
+  respuestaId     Int
+  generoMusical   String    @db.VarChar(50)
+  
+  respuesta       Respuestas_Encuesta @relation(fields: [respuestaId], references: [id])
+  
+  @@map("preferencias_generos")
+}
