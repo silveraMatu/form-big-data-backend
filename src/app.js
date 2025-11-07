@@ -6,6 +6,6 @@ export const app = e()
 
 app.use(e.json())
 app.use(cors({
-  origin: 'https://form-radio-femaax.vercel.app/' // <-- Cambia esto por tu URL de React
+  origin: 'https://form-radio-femaax.vercel.app' // <-- Cambia esto por tu URL de React
 }));
 app.use("/api", router)
